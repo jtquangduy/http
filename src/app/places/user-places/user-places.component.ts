@@ -20,7 +20,6 @@ export class UserPlacesComponent implements OnInit {
   private placesService = inject(PlacesService);
   private destroyRef = inject(DestroyRef);
   places = this.placesService.loadedUserPlaces;
-  
 
   ngOnInit() {
     this.isFetching.set(true);
@@ -32,6 +31,14 @@ export class UserPlacesComponent implements OnInit {
         this.isFetching.set(false);
       },
     });
+
+    this.destroyRef.onDestroy(() => {
+      subcription.unsubscribe();
+    });
+  }
+
+  onRemovePlace(place: Place) {
+    const subcription = this.placesService.removeUserPlace(place).subscribe();
 
     this.destroyRef.onDestroy(() => {
       subcription.unsubscribe();
